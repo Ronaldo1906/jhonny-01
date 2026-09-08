@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nombre": "Teclado Mecánico RGB",
+    "precio": 180000,
+    "stock": 15,
+    "categoria": "Periféricos",
+    "imagen": null
+  },
+  {
+    "id": 2,
+    "nombre": "Monitor 24 pulgadas",
+    "precio": 650000,
+    "stock": 8,
+    "categoria": "Pantallas",
+    "imagen": null
+  }
+]
