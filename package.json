@@ -4,5 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "pg": "^8.23.0"
   }
 }

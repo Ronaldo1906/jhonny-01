@@ -12,6 +12,15 @@ const __dirname = path.dirname(__filename);
 const rutaProductos = path.join(__dirname, "datosProductos.json");
 
 // ==========================================
+// SIMULACIÓN DE BASE DE DATOS (Usuarios)
+// ==========================================
+const usuariosBD = [
+  { id: 1, usuario: "ronaldo", contrasena: "admin123", nombre: "Ronaldo Meza" },
+  { id: 2, usuario: "jhonny", contrasena: "password2026", nombre: "Jhonny Developer" },
+  { id: 3, usuario: "sena", contrasena: "sena1234", nombre: "Usuario SENA" }
+];
+
+// ==========================================
 // MIDDLEWARES GLOBALES
 // ==========================================
 app.use(express.json());
@@ -63,6 +72,64 @@ const validarProductoBody = (req, res, next) => {
 // ==========================================
 app.get("/", (req, res) => res.send("<h1>Api Rest Productos la 80 (ES Modules)</h1>"));
 
+// 1. Endpoint: Acceso denegado
+app.get("/acceso-denegado", (req, res) => {
+  return res.status(403).json({
+    status: 403,
+    error: "Forbidden",
+    mensaje: "Acceso denegado. No tienes permisos para acceder a este recurso.",
+  });
+});
+
+// 2. Endpoint: Login con captura y validación en arreglo (Base de datos simulada)
+app.post("/login", (req, res) => {
+  const { usuario, contrasena } = req.body;
+
+  // Imprimir en consola de VS Code para verificación
+  console.log("\n--- Intento de Login ---");
+  console.log("Usuario capturado:", usuario);
+  console.log("Contraseña capturada:", contrasena);
+
+  // Validación de datos de entrada
+  if (!usuario || !contrasena) {
+    return res.status(400).json({
+      status: 400,
+      mensaje: "Por favor, proporciona el usuario y la contraseña.",
+    });
+  }
+
+  // Buscar coincidencia en la "Base de Datos"
+  const usuarioEncontrado = usuariosBD.find(
+    (u) => u.usuario.toLowerCase() === usuario.trim().toLowerCase()
+  );
+
+  if (!usuarioEncontrado) {
+    return res.status(401).json({
+      status: 401,
+      mensaje: "El usuario ingresado no existe.",
+    });
+  }
+
+  if (usuarioEncontrado.contrasena !== contrasena) {
+    return res.status(401).json({
+      status: 401,
+      mensaje: "Contraseña incorrecta.",
+    });
+  }
+
+  return res.status(200).json({
+    status: 200,
+    mensaje: `¡Bienvenido de nuevo, ${usuarioEncontrado.nombre}!`,
+    usuario: {
+      id: usuarioEncontrado.id,
+      usuario: usuarioEncontrado.usuario,
+      nombre: usuarioEncontrado.nombre
+    },
+    token: "jwt-token-simulado-xyz123"
+  });
+});
+
+// Endpoints de Productos
 app.get("/api/productos", (req, res) => {
   res.json(leerProductos());
 });
